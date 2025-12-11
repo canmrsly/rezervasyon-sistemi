@@ -11,7 +11,12 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // DbContext
-builder.Services.AddDbContext<AppDbContext>(options => { var connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); if (Uri.TryCreate(connectionString, UriKind.Absolute, out var uri) && uri.Scheme == "postgres") { var userInfo = uri.UserInfo.Split(':'); var csBuilder = new Npgsql.NpgsqlConnectionStringBuilder { Host = uri.Host, Port = uri.Port, Username = userInfo[0], Password = userInfo[1], Database = uri.LocalPath.TrimStart('/'), SslMode = Npgsql.SslMode.Prefer, TrustServerCertificate = true }; connectionString = csBuilder.ToString(); } options.UseNpgsql(connectionString); });
+// Basitleştirilmiş Bağlantı Bloğu
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseNpgsql(connectionString);
+});
 
 builder.Services.AddCors(options =>
 {
