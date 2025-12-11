@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+ï»¿using Microsoft.EntityFrameworkCore;
 using ReservationSystem.Application.Interfaces;
 using ReservationSystem.Infrastructure.Data;
 using ReservationSystem.Infrastructure.Seed;
@@ -11,10 +11,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // DbContext
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+builder.Services.AddDbContext<AppDbContext>(options => { var connectionString = builder.Configuration.GetConnectionString("DefaultConnection"); if (Uri.TryCreate(connectionString, UriKind.Absolute, out var uri) && uri.Scheme == "postgres") { var userInfo = uri.UserInfo.Split(':'); var csBuilder = new Npgsql.NpgsqlConnectionStringBuilder { Host = uri.Host, Port = uri.Port, Username = userInfo[0], Password = userInfo[1], Database = uri.LocalPath.TrimStart('/'), SslMode = Npgsql.SslMode.Prefer, TrustServerCertificate = true }; connectionString = csBuilder.ToString(); } options.UseNpgsql(connectionString); });
 
 builder.Services.AddCors(options =>
 {
@@ -37,7 +34,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 // Controllers
 builder.Services.AddControllers();
 
-// JWT Key'i config veya ortam deðiþkeninden oku
+// JWT Key'i config veya ortam deÄŸiÅŸkeninden oku
 var jwtKey = builder.Configuration["Jwt:Key"]
              ?? Environment.GetEnvironmentVariable("JWT_KEY")
              ?? throw new Exception("JWT key not found. Set JWT_KEY environment variable.");
@@ -75,11 +72,11 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 
-    // ?? JWT Tanýmý
+    // ?? JWT TanÄ±mÄ±
     var securitySchema = new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Description = "Bearer {token} þeklinde giriniz.",
+        Description = "Bearer {token} ÅŸeklinde giriniz.",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
         Scheme = "bearer",
@@ -127,3 +124,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
