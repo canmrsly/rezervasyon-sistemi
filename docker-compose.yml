@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: "./randevu app"
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=ReservationDb;Username=postgres;Password=Your_password123;"
+      Jwt__Key: "super-secret-key-change-me"
+      Captcha__SiteKey: "6LeT6hYsAAAAAK6H03TnK_B6DSAgocp3_ZL_ppra"
+      Captcha__SecretKey: "6LeT6hYsAAAAAKdtFQommol_6LBsIW24Ot7UdZhs"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Your_password123
+      POSTGRES_DB: ReservationDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+

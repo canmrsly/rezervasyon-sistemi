@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+**/dist/
+**/build/
+**/bin/
+**/obj/
+
+# .NET
+*.dll
+*.exe
+*.pdb
+*.cache
+*.user
+*.suo
+.vs/
+
+# Environment files (ÖNEMLİ: şifreleri GitHub'a yüklemeyin!)
+.env
+**/.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Docker
+docker-compose.override.yml
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+
+# Temporary files
+*.tmp
+*.temp
+
+# Migrations (opsiyonel - projeye göre)
+# **/Migrations/
